@@ -35,8 +35,7 @@ const AllPizza = () => {
             </Button>
             <Button onClick={() => {
               setKosar([...kosar, Number(p.id)])
-              //localStorage.setItem("kosar", "helloworld!")
-              toast.success("Sikeressen a kosára")
+              toast.success("Sikeresen a kosarába tette a pizzát")
             }} variant="info">
               Kosárba
             </Button>

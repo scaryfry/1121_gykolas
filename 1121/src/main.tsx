@@ -8,16 +8,18 @@ import { ToastContainer } from "react-toastify";
 import NotFoundPage from "./pages/NotFoundPage";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CreatePizza from "./pages/CreatePizza";
+import Cart from "./pages/Cart"
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-         <Route path="/" element={<AllPizza/>}></Route>
-         <Route path="/:id" element={<OnePizza/>}></Route>
-         <Route path="/edit-page/:id" element={<EditPizza/>}></Route>
-         <Route path="/create-page" element={<CreatePizza/>}></Route>
-         <Route path="*" element = {<NotFoundPage/>}></Route>
+        <Route path="/" element={<AllPizza />}></Route>
+        <Route path="/:id" element={<OnePizza />}></Route>
+        <Route path="/edit-page/:id" element={<EditPizza />}></Route>
+        <Route path="/create-page" element={<CreatePizza />}></Route>
+        <Route path="/kosar" element={<Cart />}></Route>
+        <Route path="*" element={<NotFoundPage />}></Route>
       </Routes>
     </BrowserRouter>
     <ToastContainer theme="colored" />
