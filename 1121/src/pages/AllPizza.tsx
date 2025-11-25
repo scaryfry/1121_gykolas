@@ -9,6 +9,7 @@ const AllPizza = () => {
   const navigate = useNavigate();
 
   const [pizzak, setPizzak] = useState<Array<Pizza>>([]);
+  const [kosar, setKosar] = useState<Array<number>>(JSON.parse(localStorage.getItem("kosar") ?? "[]")); //Csak id-kat tárolunk
 
   useEffect(() => {
     apiClient
@@ -16,6 +17,10 @@ const AllPizza = () => {
       .then((response) => setPizzak(response.data))
       .catch(() => toast.error("A pizzák betöltése sikertelen volt"));
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("kosar", JSON.stringify(kosar))
+  }, [kosar])
 
   const cardItem = (p: Pizza) => {
     return (
@@ -25,11 +30,15 @@ const AllPizza = () => {
           <Card.Body>
             <Card.Title>{p.nev}</Card.Title>
             <Card.Text>{p.leiras}</Card.Text>
-            <Button
-              onClick={() => navigate(`/${p.id}`)}
-              variant="success"
-            >
+            <Button onClick={() => navigate(`/${p.id}`)} variant="success">
               Megtekintés
+            </Button>
+            <Button onClick={() => {
+              setKosar([...kosar, Number(p.id)])
+              //localStorage.setItem("kosar", "helloworld!")
+              toast.success("Sikeressen a kosára")
+            }} variant="info">
+              Kosárba
             </Button>
           </Card.Body>
         </Card>
