@@ -27,9 +27,19 @@ const Cart = () => {
 
   // elem törlése a kosárból index alapján
   const removeItem = (searchedIndex: number) => {
-    setKosar(kosar.filter((v, i) => i !== searchedIndex));
+    setKosar(kosar.filter((_, i) => i !== searchedIndex));
   };
-
+  // összes ár kiszámolása
+  const calculateTotal = () => {
+    let total = 0;
+    kosar.forEach((id) => {
+      const pizza = pizzak.find((p) => p.id == id);
+      if (pizza) {
+        total += pizza.ar;
+      }
+    });
+    return total;
+  };
   return (
     <>
       <h1>Kosár tartalma</h1>
@@ -55,10 +65,12 @@ const Cart = () => {
               </tr>
             );
           })}
+          <tr>Összesen: {calculateTotal()} Ft</tr>
         </tbody>
       </Table>
     </>
   );
 };
+
 
 export default Cart;
