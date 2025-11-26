@@ -1,41 +1,64 @@
-import { useEffect, useState } from "react";
-import type { Pizza } from "../types/Pizza";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 import apiClient from "../api/apiClient";
-import { Table } from "react-bootstrap";
+import type { Pizza } from "../types/Pizza";
+import { Button, Table } from "react-bootstrap";
+import { FaTrash } from "react-icons/fa";
 
 const Cart = () => {
-    
-  const [kosar, setKosar] = useState<Array<number>>(JSON.parse(localStorage.getItem("kosar") ?? "[]"));
+  // pizzák betöltése az API-ról
   const [pizzak, setPizzak] = useState<Array<Pizza>>([]);
-
   useEffect(() => {
-    apiClient.get("/pizzak").then((response) => setPizzak(response.data)).catch(() => {"Sikertelen pizza betöltés!"})
-  }, [])
-  const [fizetendo, setFizetendo] = useState<number>();
+    apiClient
+      .get("/pizzak")
+      .then((response) => setPizzak(response.data))
+      .catch(() => toast.error("A pizzák betöltése sikertelen volt"));
+  }, []);
 
-    return(
-        <Table striped bordered hover>
+  // kosár betöltése localStorage-ból vagy üres tömb, ha nincs
+  const [kosar, setKosar] = useState<Array<number>>(
+    JSON.parse(localStorage.getItem("kosar") ?? "[]")
+  );
+
+  // ha a kosár változik, akkor elmentjük a localStorage-ba
+  useEffect(() => {
+    localStorage.setItem("kosar", JSON.stringify(kosar));
+  }, [kosar]);
+
+  // elem törlése a kosárból index alapján
+  const removeItem = (searchedIndex: number) => {
+    setKosar(kosar.filter((v, i) => i !== searchedIndex));
+  };
+
+  return (
+    <>
+      <h1>Kosár tartalma</h1>
+      <Table striped bordered hover>
         <thead>
-        <th>Név</th>
-        <th>Ár</th>
+          <th>Név</th>
+          <th>Ár</th>
+          <th>Törlés</th>
         </thead>
         <tbody>
-        {kosar.map(id => {
+          {kosar.map((id, index) => {
             const pizza = pizzak.find((p) => p.id == id);
+
             return (
-                <tr>
-                {pizza?.nev}
-                {pizza?.ar}
-                </tr>
-            )
-        })}
+              <tr>
+                <td>{pizza?.nev}</td>
+                <td>{pizza?.ar} Ft</td>
+                <td>
+                  <Button onClick={() => removeItem(index)} variant="danger">
+                    <FaTrash />
+                  </Button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
-        <tfoot>
-        <td>{fizetendo} Ft</td>
-        <td></td>
-        </tfoot>
-        </Table>
-    )
-}
+      </Table>
+    </>
+  );
+};
 
 export default Cart;
